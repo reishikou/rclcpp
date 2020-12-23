@@ -14,6 +14,7 @@
 
 #include "rclcpp/node_interfaces/node_timers.hpp"
 
+#include "tracetools/tracetools.h"
 #include <string>
 
 using rclcpp::node_interfaces::NodeTimers;
@@ -44,4 +45,8 @@ NodeTimers::add_timer(
             std::string("Failed to notify wait set on timer creation: ") +
             rmw_get_error_string().str);
   }
+  TRACEPOINT(rclcpp_timer_added, (const void *)
+             node_base_->get_rcl_node_handle(),
+             (const void *)timer->get_timer_handle().get()
+             );
 }

@@ -26,6 +26,7 @@
 #include "rclcpp/node_interfaces/get_node_timers_interface.hpp"
 #include "rclcpp/node_interfaces/node_base_interface.hpp"
 #include "rclcpp/node_interfaces/node_timers_interface.hpp"
+#include "tracetools/tracetools.h"
 
 namespace rclcpp
 {
@@ -132,9 +133,11 @@ create_wall_timer(
             "Casting timer period to nanoseconds resulted in integer overflow."};
   }
 
+
   auto timer = rclcpp::WallTimer<CallbackT>::make_shared(
     period_ns, std::move(callback), node_base->get_context());
   node_timers->add_timer(timer, group);
+
   return timer;
 }
 
