@@ -197,7 +197,7 @@ public:
   virtual void
   publish(std::unique_ptr<MessageT, MessageDeleter> msg)
   {
-    publish_trace_.tracepoint(*msg, this->get_publisher_handle().get());
+    // publish_trace_.tracepoint(*msg, this->get_publisher_handle().get());
     if (!intra_process_is_enabled_) {
       this->do_inter_process_publish(*msg);
       return;
@@ -222,7 +222,7 @@ public:
   virtual void
   publish(const MessageT & msg)
   {
-    publish_trace_uniq_.tracepoint(msg, this->get_publisher_handle().get());
+    // publish_trace_uniq_.tracepoint(msg, this->get_publisher_handle().get());
     // Avoid allocating when not using intra process.
     if (!intra_process_is_enabled_) {
       // In this case we're not using intra process.
