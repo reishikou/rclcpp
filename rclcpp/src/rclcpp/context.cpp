@@ -20,6 +20,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <iostream>
 
 #include "rcl/init.h"
 #include "rcl/logging.h"
@@ -194,6 +195,7 @@ Context::init(
   char const * const argv[],
   const rclcpp::InitOptions & init_options)
 {
+  std::cout<< "using forked foxy" << std::endl;
   std::lock_guard<std::recursive_mutex> init_lock(init_mutex_);
   if (this->is_valid()) {
     throw rclcpp::ContextAlreadyInitialized();
