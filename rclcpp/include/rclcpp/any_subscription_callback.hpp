@@ -37,23 +37,6 @@
 namespace rclcpp
 {
 
-template <typename MessageT>
-class SubscribeTrace {
-public:
-  void tracepoint(MessageT received_message, const void *callback, rclcpp::MessageInfo info) {
-    auto rmw_info = info.get_rmw_message_info();
-    const auto timestamp_from_header =
-        TimeStamp<MessageT>::value(received_message);
-    if (timestamp_from_header.first) {
-      TRACEPOINT(rclcpp_subscribe, callback, timestamp_from_header.second,
-                 rmw_info.source_timestamp, rmw_info.received_timestamp);
-    } else {
-      TRACEPOINT(rclcpp_subscribe, callback, 0, 0,
-                 rmw_info.received_timestamp);
-    }
-  }
-};
-
 template<typename MessageT, typename Alloc>
 class AnySubscriptionCallback
 {
@@ -185,7 +168,9 @@ public:
   void dispatch(
     std::shared_ptr<MessageT> message, const rclcpp::MessageInfo & message_info)
   {
-    subscribe_trace_shared_.tracepoint(*message, (const void *)this, message_info);
+    auto rmw_info = message_info.get_rmw_message_info();
+    TRACEPOINT(rclcpp_subscribe, (const void *)this,
+               rmw_info.source_timestamp, rmw_info.received_timestamp);
     TRACEPOINT(callback_start, (const void *)this, false);
     if (shared_ptr_callback_) {
       shared_ptr_callback_(message);
@@ -212,7 +197,9 @@ public:
   void dispatch_intra_process(
     ConstMessageSharedPtr message, const rclcpp::MessageInfo & message_info)
   {
-    subscribe_trace_const_shared_.tracepoint(*message, (const void *)this, message_info);
+    auto rmw_info = message_info.get_rmw_message_info();
+    TRACEPOINT(rclcpp_subscribe, (const void *)this,
+               rmw_info.source_timestamp, rmw_info.received_timestamp);
     TRACEPOINT(callback_start, (const void *)this, true);
     if (const_shared_ptr_callback_) {
       const_shared_ptr_callback_(message);
@@ -236,7 +223,9 @@ public:
   void dispatch_intra_process(
     MessageUniquePtr message, const rclcpp::MessageInfo & message_info)
   {
-    subscribe_trace_unique_.tracepoint(*message, (const void *)this, message_info);
+    auto rmw_info = message_info.get_rmw_message_info();
+    TRACEPOINT(rclcpp_subscribe, (const void *)this, rmw_info.source_timestamp,
+               rmw_info.received_timestamp);
     TRACEPOINT(callback_start, (const void *)this, true);
     if (shared_ptr_callback_) {
       typename std::shared_ptr<MessageT> shared_message = std::move(message);
@@ -293,9 +282,6 @@ public:
 private:
   std::shared_ptr<MessageAlloc> message_allocator_;
   MessageDeleter message_deleter_;
-  SubscribeTrace<MessageT> subscribe_trace_shared_;
-  SubscribeTrace<MessageT> subscribe_trace_unique_;
-  SubscribeTrace<MessageT> subscribe_trace_const_shared_;
 };
 
 }  // namespace rclcpp

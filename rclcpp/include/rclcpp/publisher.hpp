@@ -47,18 +47,6 @@ namespace rclcpp
 template<typename MessageT, typename AllocatorT>
 class LoanedMessage;
 
-template <typename MessageT>
-class PublishTrace {
-public:
-  void tracepoint(MessageT received_message, const void *publish_handle) {
-    const auto timestamp_from_header =
-        TimeStamp<MessageT>::value(received_message);
-    if (timestamp_from_header.first) {
-      TRACEPOINT(rclcpp_publish, publish_handle, timestamp_from_header.second);
-    }
-  }
-};
-
 /// A publisher publishes messages of any type to a topic.
 template<typename MessageT, typename AllocatorT = std::allocator<void>>
 class Publisher : public PublisherBase
@@ -197,7 +185,6 @@ public:
   virtual void
   publish(std::unique_ptr<MessageT, MessageDeleter> msg)
   {
-    // publish_trace_.tracepoint(*msg, this->get_publisher_handle().get());
     if (!intra_process_is_enabled_) {
       this->do_inter_process_publish(*msg);
       return;
@@ -222,7 +209,6 @@ public:
   virtual void
   publish(const MessageT & msg)
   {
-    // publish_trace_uniq_.tracepoint(msg, this->get_publisher_handle().get());
     // Avoid allocating when not using intra process.
     if (!intra_process_is_enabled_) {
       // In this case we're not using intra process.
@@ -294,6 +280,9 @@ protected:
   void
   do_inter_process_publish(const MessageT & msg)
   {
+    TRACEPOINT(rclcpp_publish,
+               static_cast<const void *>(publisher_handle_.get()),
+               static_cast<const void *>(&msg));
     auto status = rcl_publish(publisher_handle_.get(), &msg, nullptr);
 
     if (RCL_RET_PUBLISHER_INVALID == status) {
@@ -390,10 +379,6 @@ protected:
   std::shared_ptr<MessageAllocator> message_allocator_;
 
   MessageDeleter message_deleter_;
-
- private:
-   PublishTrace<MessageT> publish_trace_;
-   PublishTrace<MessageT> publish_trace_uniq_;
 };
 
 }  // namespace rclcpp
