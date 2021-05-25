@@ -347,7 +347,7 @@ SyncParametersClient::SyncParametersClient(
   const std::string & remote_node_name,
   const rmw_qos_profile_t & qos_profile)
 : SyncParametersClient(
-    std::make_shared<rclcpp::executors::SingleThreadedExecutor>(),
+    std::make_shared<rclcpp::executors::StaticSingleThreadedExecutor>(),
     node,
     remote_node_name,
     qos_profile)
@@ -373,7 +373,7 @@ SyncParametersClient::SyncParametersClient(
   const std::string & remote_node_name,
   const rmw_qos_profile_t & qos_profile)
 : SyncParametersClient(
-    std::make_shared<rclcpp::executors::SingleThreadedExecutor>(),
+    std::make_shared<rclcpp::executors::StaticSingleThreadedExecutor>(),
     node,
     remote_node_name,
     qos_profile)
