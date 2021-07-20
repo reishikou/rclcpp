@@ -23,6 +23,7 @@
 #include <stdexcept>
 #include <string>
 #include <utility>
+#include <iostream>
 
 #include "rcl/error_handling.h"
 
@@ -96,6 +97,7 @@ public:
       rclcpp_subscription_callback_added,
       static_cast<const void *>(this),
       static_cast<const void *>(&any_callback_));
+    std::cerr << "rclcpp_subscription_callback_added," << this << "," << &any_callback_ << std::endl;
     // The callback object gets copied, so if registration is done too early/before this point
     // (e.g. in `AnySubscriptionCallback::set()`), its address won't match any address used later
     // in subsequent tracepoints.

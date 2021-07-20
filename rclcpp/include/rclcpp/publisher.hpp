@@ -220,6 +220,7 @@ public:
     // A shared_ptr<const MessageT> could also be constructed here.
     auto ptr = MessageAllocatorTraits::allocate(*message_allocator_.get(), 1);
     MessageAllocatorTraits::construct(*message_allocator_.get(), ptr, msg);
+    std::cerr << "message_construct," << &msg << "," << ptr << std::endl;
     MessageUniquePtr unique_msg(ptr, message_deleter_);
     this->publish(std::move(unique_msg));
   }
@@ -285,6 +286,7 @@ protected:
       rclcpp_publish,
       static_cast<const void *>(publisher_handle_.get()),
       static_cast<const void *>(&msg));
+    std::cerr << "rclcpp_publish," <<publisher_handle_.get()  << "," << &msg << std::endl;
     auto status = rcl_publish(publisher_handle_.get(), &msg, nullptr);
 
     if (RCL_RET_PUBLISHER_INVALID == status) {
@@ -339,6 +341,7 @@ protected:
   do_intra_process_publish(std::unique_ptr<MessageT, MessageDeleter> msg)
   {
     auto ipm = weak_ipm_.lock();
+    std::cerr << "do_intra_process_publish," << msg.get() << std::endl;
     if (!ipm) {
       throw std::runtime_error(
               "intra process publish called after destruction of intra process manager");
@@ -347,6 +350,7 @@ protected:
       throw std::runtime_error("cannot publish msg which is a null pointer");
     }
 
+    auto msg_ptr = msg.get();
     ipm->template do_intra_process_publish<MessageT, AllocatorT>(
       intra_process_publisher_id_,
       std::move(msg),
@@ -357,6 +361,7 @@ protected:
   do_intra_process_publish_and_return_shared(std::unique_ptr<MessageT, MessageDeleter> msg)
   {
     auto ipm = weak_ipm_.lock();
+    std::cerr << "do_intra_process_publish," << msg.get() << std::endl;
     if (!ipm) {
       throw std::runtime_error(
               "intra process publish called after destruction of intra process manager");
@@ -365,10 +370,12 @@ protected:
       throw std::runtime_error("cannot publish msg which is a null pointer");
     }
 
-    return ipm->template do_intra_process_publish_and_return_shared<MessageT, AllocatorT>(
+    auto msg_ptr = msg.get();
+    auto ret = ipm->template do_intra_process_publish_and_return_shared<MessageT, AllocatorT>(
       intra_process_publisher_id_,
       std::move(msg),
       message_allocator_);
+    return ret;
   }
 
   /// Copy of original options passed during construction.

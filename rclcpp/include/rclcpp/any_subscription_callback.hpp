@@ -20,6 +20,7 @@
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
+#include <iostream>
 #include <variant>  // NOLINT[build/include_order]
 
 #include "tracetools/tracetools.h"
@@ -226,7 +227,10 @@ public:
     std::shared_ptr<MessageT> message,
     const rclcpp::MessageInfo & message_info)
   {
-    TRACEPOINT(callback_start, static_cast<const void *>(this), false);
+    auto callback_ptr = static_cast<const void *>(this);
+    std::cerr << "rclcpp_subscription," << message.get() << "," << callback_ptr << std::endl;
+    TRACEPOINT(callback_start, callback_ptr, false);
+    std::cerr << "callback_start," << this << "," << false << std::endl;
     // Check if the variant is "unset", throw if it is.
     if (callback_variant_.index() == 0) {
       if (std::get<0>(callback_variant_) == nullptr) {
@@ -264,6 +268,7 @@ public:
         }
       }, callback_variant_);
     TRACEPOINT(callback_end, static_cast<const void *>(this));
+    std::cerr << "callback_end," << this << std::endl;
   }
 
   void
@@ -271,7 +276,9 @@ public:
     std::shared_ptr<const MessageT> message,
     const rclcpp::MessageInfo & message_info)
   {
+    std::cerr << "dispatch_intra_process," << message.get() << "," << this << std::endl;
     TRACEPOINT(callback_start, static_cast<const void *>(this), true);
+    std::cerr << "callback_start," << this << "," << true << std::endl;
     // Check if the variant is "unset", throw if it is.
     if (callback_variant_.index() == 0) {
       if (std::get<0>(callback_variant_) == nullptr) {
@@ -313,6 +320,7 @@ public:
         }
       }, callback_variant_);
     TRACEPOINT(callback_end, static_cast<const void *>(this));
+    std::cerr << "callback_end," << this << std::endl;
   }
 
   void
@@ -320,7 +328,9 @@ public:
     std::unique_ptr<MessageT, MessageDeleter> message,
     const rclcpp::MessageInfo & message_info)
   {
+    std::cerr << "dispatch_intra_process," << message.get() << "," << this << std::endl;
     TRACEPOINT(callback_start, static_cast<const void *>(this), true);
+    std::cerr << "callback_start," << this << "," << true << std::endl;
     // Check if the variant is "unset", throw if it is.
     if (callback_variant_.index() == 0) {
       if (std::get<0>(callback_variant_) == nullptr) {
@@ -356,6 +366,7 @@ public:
         }
       }, callback_variant_);
     TRACEPOINT(callback_end, static_cast<const void *>(this));
+    std::cerr << "callback_end," << this << std::endl;
   }
 
   constexpr
@@ -379,6 +390,7 @@ public:
           rclcpp_callback_register,
           static_cast<const void *>(this),
           tracetools::get_symbol(callback));
+	std::cerr << "callback_register," << this << "," << tracetools::get_symbol(callback) << std::endl;
       }, callback_variant_);
 #endif  // TRACETOOLS_DISABLED
   }

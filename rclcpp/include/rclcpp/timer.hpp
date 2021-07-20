@@ -23,6 +23,7 @@
 #include <thread>
 #include <type_traits>
 #include <utility>
+#include <iostream>
 
 #include "rclcpp/clock.hpp"
 #include "rclcpp/context.hpp"
@@ -178,10 +179,12 @@ public:
       rclcpp_timer_callback_added,
       static_cast<const void *>(get_timer_handle().get()),
       static_cast<const void *>(&callback_));
+    std::cerr << "rclcpp_timer_callback_added," << (get_timer_handle().get()) << "," << &callback_ << std::endl;
     TRACEPOINT(
       rclcpp_callback_register,
       static_cast<const void *>(&callback_),
       tracetools::get_symbol(callback_));
+    std::cerr << "rclcpp_callback_register," << &callback_ << "," << tracetools::get_symbol(callback_) << std::endl;
   }
 
   /// Default destructor.

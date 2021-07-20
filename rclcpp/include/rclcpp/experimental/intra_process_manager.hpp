@@ -425,6 +425,7 @@ private:
           Deleter deleter = message.get_deleter();
           auto ptr = MessageAllocTraits::allocate(*allocator.get(), 1);
           MessageAllocTraits::construct(*allocator.get(), ptr, *message);
+          std::cerr << "message_construct," << message.get() << "," << ptr << std::endl;
           copy_message = MessageUniquePtr(ptr, deleter);
 
           subscription->provide_intra_process_message(std::move(copy_message));

@@ -216,6 +216,7 @@ public:
       rclcpp_service_callback_added,
       static_cast<const void *>(get_service_handle().get()),
       static_cast<const void *>(&any_callback_));
+    std::cerr << "rclcpp_service_callback_added," << (get_service_handle().get()) << "," << &any_callback_ << std::endl;
 #ifndef TRACETOOLS_DISABLED
     any_callback_.register_callback_for_tracing();
 #endif
@@ -251,6 +252,7 @@ public:
       rclcpp_service_callback_added,
       static_cast<const void *>(get_service_handle().get()),
       static_cast<const void *>(&any_callback_));
+    std::cerr << "rclcpp_service_callback_added," << (get_service_handle().get()) << "," << &any_callback_ << std::endl;
 #ifndef TRACETOOLS_DISABLED
     any_callback_.register_callback_for_tracing();
 #endif
@@ -288,6 +290,7 @@ public:
       rclcpp_service_callback_added,
       static_cast<const void *>(get_service_handle().get()),
       static_cast<const void *>(&any_callback_));
+    std::cerr << "rclcpp_service_callback_added," << (get_service_handle().get()) << "," << &any_callback_ << std::endl;
 #ifndef TRACETOOLS_DISABLED
     any_callback_.register_callback_for_tracing();
 #endif
