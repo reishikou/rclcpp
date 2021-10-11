@@ -35,6 +35,7 @@
 #include "rmw/error_handling.h"
 #include "rmw/rmw.h"
 #include "tracetools/tracetools.h"
+#include "tracetools/utils.hpp"//rei
 
 namespace rclcpp
 {
@@ -360,7 +361,11 @@ public:
 
   void
   send_response(rmw_request_id_t & req_id, typename ServiceT::Response & response)
-  {
+  { //rei
+    // TRACEPOINT(server_response,
+    //            static_cast<const void *>(get_service_handle().get()),
+    //            static_cast<const void *>(&response));
+    //rei
     rcl_ret_t ret = rcl_send_response(get_service_handle().get(), &req_id, &response);
 
     if (ret != RCL_RET_OK) {

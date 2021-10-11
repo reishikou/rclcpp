@@ -36,7 +36,10 @@
 #include "rclcpp/utilities.hpp"
 #include "rclcpp/expand_topic_or_service_name.hpp"
 #include "rclcpp/visibility_control.hpp"
-
+#include "tracetools/utils.hpp"//rei
+#include "tracetools/tracetools.h"//rei
+#include "rclcpp/message_info.hpp"//rei
+#include "rclcpp/allocator/allocator_common.hpp"//rei
 #include "rcutils/logging_macros.h"
 
 #include "rmw/error_handling.h"
@@ -291,7 +294,11 @@ public:
   handle_response(
     std::shared_ptr<rmw_request_id_t> request_header,
     std::shared_ptr<void> response) override
-  {
+  { //rei
+    // auto rmw_info = message_info.get_rmw_message_info();
+    // TRACEPOINT(client_reponse, (const void *)this,
+    //            rmw_info.source_timestamp, rmw_info.received_timestamp);
+    //rei
     std::unique_lock<std::mutex> lock(pending_requests_mutex_);
     auto typed_response = std::static_pointer_cast<typename ServiceT::Response>(response);
     int64_t sequence_number = request_header->sequence_number;
@@ -331,7 +338,11 @@ public:
   >
   SharedFuture
   async_send_request(SharedRequest request, CallbackT && cb)
-  {
+  { //rei
+    TRACEPOINT(client_request,
+               static_cast<const void *>(get_client_handle().get()),
+               static_cast<const void *>(request.get()));
+    //rei
     std::lock_guard<std::mutex> lock(pending_requests_mutex_);
     int64_t sequence_number;
     rcl_ret_t ret = rcl_send_request(get_client_handle().get(), request.get(), &sequence_number);
@@ -357,7 +368,7 @@ public:
   >
   SharedFutureWithRequest
   async_send_request(SharedRequest request, CallbackT && cb)
-  {
+  { 
     SharedPromiseWithRequest promise = std::make_shared<PromiseWithRequest>();
     SharedFutureWithRequest future_with_request(promise->get_future());
 
