@@ -296,7 +296,7 @@ public:
     std::shared_ptr<void> response) override
   { //rei
     // auto rmw_info = message_info.get_rmw_message_info();
-    // TRACEPOINT(client_reponse, (const void *)this,
+    // TRACEPOINT(client_response, (const void *)this,
     //            rmw_info.source_timestamp, rmw_info.received_timestamp);
     //rei
     std::unique_lock<std::mutex> lock(pending_requests_mutex_);
