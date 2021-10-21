@@ -23,6 +23,7 @@
 #include <string>
 #include <tuple>
 #include <utility>
+#include <iostream>//rei
 
 #include "rcl/client.h"
 #include "rcl/error_handling.h"
@@ -340,8 +341,8 @@ public:
   async_send_request(SharedRequest request, CallbackT && cb)
   { //rei
     TRACEPOINT(client_request,
-               static_cast<const void *>(get_client_handle().get()),
-               static_cast<const void *>(request.get()));
+               get_client_handle().get(),
+               request.get());
     //rei
     std::lock_guard<std::mutex> lock(pending_requests_mutex_);
     int64_t sequence_number;
