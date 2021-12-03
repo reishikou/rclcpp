@@ -23,7 +23,6 @@
 #include <string>
 #include <tuple>
 #include <utility>
-#include <iostream>//rei
 
 #include "rcl/client.h"
 #include "rcl/error_handling.h"

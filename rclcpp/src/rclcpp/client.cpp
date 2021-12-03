@@ -72,7 +72,7 @@ ClientBase::~ClientBase()
 
 bool
 ClientBase::take_type_erased_response(void * response_out, rmw_request_id_t & request_header_out)
-{
+{ 
   rcl_ret_t ret = rcl_take_response(
     this->get_client_handle().get(),
     &request_header_out,
