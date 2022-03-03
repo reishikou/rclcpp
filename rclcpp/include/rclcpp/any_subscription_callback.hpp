@@ -228,9 +228,9 @@ public:
   {
     TRACEPOINT(callback_start, static_cast<const void *>(this), false);
     //rei
-    auto rmw_info = message_info.get_rmw_message_info();
-    TRACEPOINT(rclcpp_subscribe, (const void *)this,
-               rmw_info.source_timestamp, rmw_info.received_timestamp);
+    // auto rmw_info = message_info.get_rmw_message_info();
+    // TRACEPOINT(rclcpp_subscribe, (const void *)this,
+    //            rmw_info.source_timestamp, rmw_info.received_timestamp);
     //rei
     // Check if the variant is "unset", throw if it is.
     if (callback_variant_.index() == 0) {
@@ -278,9 +278,9 @@ public:
   {
     TRACEPOINT(callback_start, static_cast<const void *>(this), true);
     //rei
-    auto rmw_info = message_info.get_rmw_message_info();
-    TRACEPOINT(rclcpp_subscribe, (const void *)this,
-               rmw_info.source_timestamp, rmw_info.received_timestamp);
+    // auto rmw_info = message_info.get_rmw_message_info();
+    // TRACEPOINT(rclcpp_subscribe, (const void *)this,
+    //            rmw_info.source_timestamp, rmw_info.received_timestamp);
     //rei
     // Check if the variant is "unset", throw if it is.
     if (callback_variant_.index() == 0) {
@@ -332,9 +332,9 @@ public:
   {
     TRACEPOINT(callback_start, static_cast<const void *>(this), true);
     //rei
-    auto rmw_info = message_info.get_rmw_message_info();
-    TRACEPOINT(rclcpp_subscribe, (const void *)this,
-               rmw_info.source_timestamp, rmw_info.received_timestamp);
+    // auto rmw_info = message_info.get_rmw_message_info();
+    // TRACEPOINT(rclcpp_subscribe, (const void *)this,
+    //            rmw_info.source_timestamp, rmw_info.received_timestamp);
     //rei
     // Check if the variant is "unset", throw if it is.
     if (callback_variant_.index() == 0) {
